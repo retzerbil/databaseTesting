@@ -14,9 +14,13 @@ app.use(cors({
 }))
 
 app.get('/products', check('q').escape(),async(req,res)=>{
-    const sortCol = req.query.sortCol || 'name';
+    const sortCol = req.query.sortCol || 'id';
     const sortOrder = req.query.sortOrder || 'asc';
     const q = req.query.q || '';
+
+    const offset = Number(req.query.offset || 0);
+    //const pageSize = req.query.pageSize || '20';
+    const limit = Number(req.query.limit || 20);
 
     const allProducts = await Product.findAll({
         where:{
@@ -26,7 +30,9 @@ app.get('/products', check('q').escape(),async(req,res)=>{
         },
         order:[
             [sortCol,sortOrder]
-        ]
+        ],
+        offset:offset,
+        limit:limit
     });
     const result = allProducts.map(p=>{
         return{

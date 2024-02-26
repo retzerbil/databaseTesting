@@ -7,3 +7,6 @@ GET http://localhost:3000/products?sortCol=name&sortOrder=desc
 
 ###GET AND SORT DESC AND SEARCH/FILTER
 GET http://localhost:3000/products?q=ur&sortCol=name&sortOrder=desc
+
+###GET AND SORT DESC AND SEARCH/FILTER WITH LIMIT AND OFFSETS
+GET http://localhost:3000/products
