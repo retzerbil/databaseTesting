@@ -1,0 +1,5 @@
+###GET ALL
+GET http://localhost:3000/products
+
+###GET AND SORT DESCENDING
+GET http://localhost:3000/products?sortCol=name&sortOrder=desc
