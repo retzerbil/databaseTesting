@@ -2,6 +2,7 @@ const express = require('express');
 const {check} = require('express-validator');
 const cors = require('cors');
 const {Product} = require('./models');
+const {Op} = require('sequelize')
 const migrationhelper = require('./migrationhelper');
 const app = express();
 const port = 3000;
@@ -12,11 +13,17 @@ app.use(cors({
     credentials:true
 }))
 
-app.get('/products',async(req,res)=>{
+app.get('/products', check('q').escape(),async(req,res)=>{
     const sortCol = req.query.sortCol || 'name';
     const sortOrder = req.query.sortOrder || 'asc';
+    const q = req.query.q || '';
 
     const allProducts = await Product.findAll({
+        where:{
+            name:{
+                [Op.like]: '%' + q + '%'
+            }
+        },
         order:[
             [sortCol,sortOrder]
         ]
