@@ -22,7 +22,7 @@ app.get('/products', check('q').escape(),async(req,res)=>{
     //const pageSize = req.query.pageSize || '20';
     const limit = Number(req.query.limit || 20);
 
-    const allProducts = await Product.findAll({
+    const allProducts = await Product.findAndCountAll({
         where:{
             name:{
                 [Op.like]: '%' + q + '%'
@@ -34,15 +34,19 @@ app.get('/products', check('q').escape(),async(req,res)=>{
         offset:offset,
         limit:limit
     });
-    const result = allProducts.map(p=>{
-        return{
-            id:p.id,
-            name:p.name,
-            unitPrice:p.unitPrice,
-            stockLevel:p.stockLevel
-        }
+    const total = allProducts.count;
+    const result = allProducts.rows.map(p=>{
+        return {
+           id:p.id,
+           name:p.name,
+           unitPrice:p.unitPrice,
+           stockLevel:p.stockLevel
+       }
     })
-    return res.json(result);
+    return res.json({
+        total,
+        result
+    })
 })
 
 app.listen(port, async () =>{
